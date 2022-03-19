@@ -1,0 +1,41 @@
+1) 
+SELECT block_number, COUNT(address)  
+FROM bigquery-public-data.crypto_ethereum.tokens
+    GROUP BY block_number
+    ORDER BY COUNT(address) DESC;
+
+2)     OK, mas dá para melhorar, coloquei apenas um dia específico e não um dia qualquer!
+SELECT COUNT(block_numbers)  
+FROM bigquery-public-data.crypto_ethereum.tokens
+WHERE block_timestamp BETWEEN #2022-03-16 00:00:00 UTC# AND #2022-03-16 23:59:59 UTC#
+
+3)
+A - Quantidade da data recente:
+SELECT COUNT(block_number) 
+FROM bigquery-public-data.crypto_ethereum.tokens
+WHERE block_timestamp BETWEEN #2022-03-16 00:00:00 UTC# AND #2022-03-16 23:59:59 UTC#
+
+B - Quantidade da data 15 dias anterior:
+SELECT COUNT(block_number) 
+FROM bigquery-public-data.crypto_ethereum.tokens
+WHERE block_timestamp BETWEEN #2022-03-01 00:00:00 UTC# AND #2022-03-01 23:59:59 UTC#
+
+4)
+A- 1 Pergunta:
+SELECT number, MAX(gas_used)  
+FROM bigquery-public-data.crypto_ethereum.blocks
+    GROUP BY number
+    ORDER BY MAX(gas_used) DESC
+    LIMIT 1;
+
+B - 2 Pergunta:
+SELECT tokens.address, blocks.number
+FROM bigquery-public-data.crypto_ethereum.tokens
+INNER JOIN bigquery-public-data.crypto_ethereum.blocks
+ON tokens.block_number=blocks.number
+WHERE tokens.block_number = (
+SELECT number   
+FROM bigquery-public-data.crypto_ethereum.blocks
+    GROUP BY number
+    ORDER BY MAX(gas_used) DESC
+    LIMIT 1);
