@@ -1,5 +1,3 @@
-Ikkkk#R
-
 2+2 #soma#
 8*2 #multiplicação#
 10/2 #divisão#
